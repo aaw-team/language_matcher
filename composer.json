@@ -1,0 +1,34 @@
+{
+    "name": "aaw-team/language_matcher",
+    "type": "typo3-cms-extension",
+    "description": "Language recognition and redirection middleware for TYPO3",
+    "keywords": ["typo3", "language", "accept-language", "redirect"],
+    "homepage": "https://github.com/aaw-team/language_matcher",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Agentur am Wasser Team",
+            "email": "development@agenturamwasser.ch",
+            "homepage": "https://web.agenturamwasser.ch/",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.2",
+        "typo3/cms-core": "^9.5|~10.3.0",
+        "piwik/device-detector": "^3.12",
+        "psr/http-factory": "^1.0"
+    },
+    "replace": {
+        "typo3-ter/language_matcher": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "AawTeam\\LanguageMatcher\\": "Classes/"
+        }
+    },
+    "support": {
+        "source": "https://github.com/aaw-team/language_matcher",
+        "issues": "https://github.com/aaw-team/language_matcher/issues"
+    }
+}

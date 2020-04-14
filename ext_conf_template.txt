@@ -1,0 +1,2 @@
+# cat=basic/enable/001; type=options[Disable Log=, EMERGENCY=emergency, ALERT=alert, CRITICAL=critical, ERROR=error, WARNING=warning, NOTICE=notice, INFO=info, DEBUG=debug]; label=PSR-3 Log Level
+logLevel = error
