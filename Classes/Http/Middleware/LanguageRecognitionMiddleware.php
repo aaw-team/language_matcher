@@ -84,6 +84,20 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
      */
     protected function shouldProcessLanguageMatching(ServerRequestInterface $request): bool
     {
+        // Check the request data
+        if (!$request->hasHeader('accept-language')) {
+            $this->logger->info('Skip language redirection: no accept-language header');
+            return false;
+        } elseif ($request->getCookieParams()[self::COOKIE_NAME]) {
+            $this->logger->info('Skip language redirection: cookie is set');
+            return false;
+        } elseif ($this->isBotRequest($request)) {
+            $this->logger->info('Skip language redirection: found bot', [
+                'user-agent' => $request->getHeaderLine('user-agent'),
+            ]);
+            return false;
+        }
+
         // Check the request attributes (system-test)
         $site = $request->getAttribute('site');
         if (!$site instanceof Site) {
@@ -120,20 +134,6 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
             $type = gettype($currentSiteLanguage);
             $this->logger->critical('Request attribute "language" is not the correct type', [
                 'type' => $type === 'object' ? get_class($currentSiteLanguage) : $type,
-            ]);
-            return false;
-        }
-
-        // Check the request data
-        if (!$request->hasHeader('accept-language')) {
-            $this->logger->info('Skip language redirection: no accept-language header');
-            return false;
-        } elseif ($request->getCookieParams()[self::COOKIE_NAME]) {
-            $this->logger->info('Skip language redirection: cookie is set');
-            return false;
-        } elseif ($this->isBotRequest($request)) {
-            $this->logger->info('Skip language redirection: found bot', [
-                'user-agent' => $request->getHeaderLine('user-agent'),
             ]);
             return false;
         }
