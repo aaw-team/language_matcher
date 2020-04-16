@@ -11,17 +11,13 @@ namespace AawTeam\LanguageMatcher\Cache;
  */
 
 use DeviceDetector\Cache\Cache as DeviceDetectorCache;
-use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * TYPO32DeviceDetectorCacheBridge
  */
 class TYPO32DeviceDetectorCacheBridge implements DeviceDetectorCache
 {
-    public const CACHE_IDENTIFIER = 'language-matcher';
-
     /**
      * @var FrontendInterface
      */
@@ -33,11 +29,6 @@ class TYPO32DeviceDetectorCacheBridge implements DeviceDetectorCache
     public function __construct(FrontendInterface $typo3CacheFrontend)
     {
         $this->typo3CacheFrontend = $typo3CacheFrontend;
-    }
-
-    public static function factory(): self
-    {
-        return new self(GeneralUtility::makeInstance(CacheManager::class)->getCache(self::CACHE_IDENTIFIER));
     }
 
     public function contains($id)

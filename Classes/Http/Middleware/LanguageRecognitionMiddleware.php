@@ -10,6 +10,7 @@ namespace AawTeam\LanguageMatcher\Http\Middleware;
  * The TYPO3 project - inspiring people to share!
  */
 
+use AawTeam\LanguageMatcher\Cache\Cache;
 use AawTeam\LanguageMatcher\Cache\TYPO32DeviceDetectorCacheBridge;
 use DeviceDetector\Parser\Bot as BotParser;
 use Psr\Http\Message\ResponseInterface;
@@ -18,7 +19,6 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Site\Entity\Site;
@@ -339,9 +339,7 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
         }
 
         $userAgentCacheIdentifier = 'ib-' . md5($userAgent);
-
-        /** @var \TYPO3\CMS\Core\Cache\Frontend\FrontendInterface $cache */
-        $cache = GeneralUtility::makeInstance(CacheManager::class)->getCache(TYPO32DeviceDetectorCacheBridge::CACHE_IDENTIFIER);
+        $cache = Cache::factory();
 
         if ($cache->has($userAgentCacheIdentifier)) {
             $isBot = $cache->get($userAgentCacheIdentifier);
@@ -349,7 +347,7 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
             $botParser = new BotParser();
             $botParser->setUserAgent($userAgent);
             $botParser->discardDetails();
-            $botParser->setCache(TYPO32DeviceDetectorCacheBridge::factory());
+            $botParser->setCache(GeneralUtility::makeInstance(TYPO32DeviceDetectorCacheBridge::class, $cache));
             $result = $botParser->parse();
             $isBot = $result !== null;
             $cache->set($userAgentCacheIdentifier, $isBot);
