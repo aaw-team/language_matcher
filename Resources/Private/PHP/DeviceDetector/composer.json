@@ -1,0 +1,10 @@
+{
+    "config" : {
+        "optimize-autoloader": true,
+        "classmap-authoritative": true,
+        "prepend-autoloader": false
+    },
+    "require": {
+        "piwik/device-detector": "^3.12"
+    }
+}

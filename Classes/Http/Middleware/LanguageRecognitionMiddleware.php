@@ -12,6 +12,7 @@ namespace AawTeam\LanguageMatcher\Http\Middleware;
 
 use AawTeam\LanguageMatcher\Cache\Cache;
 use AawTeam\LanguageMatcher\Cache\TYPO32DeviceDetectorCacheBridge;
+use AawTeam\LanguageMatcher\Utility\DependencyLoaderUtility;
 use DeviceDetector\Parser\Bot as BotParser;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -344,6 +345,7 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
         if ($cache->has($userAgentCacheIdentifier)) {
             $isBot = $cache->get($userAgentCacheIdentifier);
         } else {
+            DependencyLoaderUtility::loadDeviceDetector();
             $botParser = new BotParser();
             $botParser->setUserAgent($userAgent);
             $botParser->discardDetails();
