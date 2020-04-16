@@ -16,8 +16,7 @@
     "require": {
         "php": ">=7.2",
         "typo3/cms-core": "^9.5|~10.3.0",
-        "piwik/device-detector": "^3.12",
-        "psr/http-factory": "^1.0"
+        "piwik/device-detector": "^3.12"
     },
     "replace": {
         "typo3-ter/language_matcher": "self.version"
