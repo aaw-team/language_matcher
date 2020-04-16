@@ -196,8 +196,6 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
             return true;
         }
 
-
-
         // Check if the page would be accessible in $language
         $page = $this->typoScriptFrontendController->page;
         $targetLanguageOverlay = $this->typoScriptFrontendController->sys_page->getPageOverlay($page, $targetLanguage->getLanguageId());
@@ -289,6 +287,10 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
     protected function getAcceptableLanguageCandidates(ServerRequestInterface $request): array
     {
         $acceptLanguageHeader = $request->getHeaderLine('accept-language');
+        if ($acceptLanguageHeader === '') {
+            return [];
+        }
+
         $allAcceptedLanguageCandidates = [];
         foreach (explode(',', $acceptLanguageHeader) as $key => $candidateString) {
 
@@ -320,6 +322,10 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
     protected function isBotRequest(ServerRequestInterface $request): bool
     {
         $userAgent = $request->getHeaderLine('user-agent');
+        if ($userAgent === '') {
+            return false;
+        }
+
         $userAgentCacheIdentifier = 'ib-' . md5($userAgent);
 
         /** @var \TYPO3\CMS\Core\Cache\Frontend\FrontendInterface $cache */
