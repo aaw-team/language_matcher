@@ -83,6 +83,41 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
      */
     protected function shouldProcessLanguageMatching(ServerRequestInterface $request): bool
     {
+        // Check the request attributes (system-test)
+        $site = $request->getAttribute('site');
+        if (!$site instanceof Site) {
+            $type = gettype($site);
+            $this->logger->critical('Request attribute "site" is not the correct type', [
+                'type' => $type === 'object' ? get_class($site) : $type,
+            ]);
+            return false;
+        }
+        if (count($site->getLanguages()) <= 1) {
+            $this->logger->warning('This site does not have more than one language', [
+                'site-identifier' => $site->getIdentifier(),
+            ]);
+            return false;
+        }
+
+        $pageArguments = $request->getAttribute('routing');
+        if (!$pageArguments instanceof PageArguments) {
+            $type = gettype($pageArguments);
+            $this->logger->critical('Request attribute "routing" is not the correct type', [
+                'type' => $type === 'object' ? get_class($pageArguments) : $type,
+            ]);
+            return false;
+        }
+
+        $currentSiteLanguage = $request->getAttribute('language');
+        if (!$currentSiteLanguage instanceof SiteLanguage) {
+            $type = gettype($currentSiteLanguage);
+            $this->logger->critical('Request attribute "language" is not the correct type', [
+                'type' => $type === 'object' ? get_class($currentSiteLanguage) : $type,
+            ]);
+            return false;
+        }
+
+        // Check the request data
         if (!$request->hasHeader('accept-language')) {
             $this->logger->info('Skip language redirection: no accept-language header');
             return false;
@@ -95,6 +130,7 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
             ]);
             return false;
         }
+
         return true;
     }
 
