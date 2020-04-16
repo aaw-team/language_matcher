@@ -29,13 +29,6 @@ For `composer <https://getcomposer.org/>`_ users:
 
     composer require aaw-team/language_matcher
 
-.. attention::
-
-   At the moment it is required to install the extension via
-   `composer <https://getcomposer.org/>`_ to make sure the dependent software is
-   present. In a later version (and if there is the need), support for
-   non-composer based installation can be added.
-
 Load the code from git
 ======================
 
