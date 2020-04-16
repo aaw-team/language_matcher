@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0" xmlns:t3="http://typo3.org/schemas/xliff">
+    <file source-language="en" datatype="plaintext" original="messages" date="2020-04-16T11:57:05Z" product-name="language_matcher">
+        <header/>
+        <body>
+            <!-- site -->
+            <trans-unit id="site.tabs.languagematcher">
+                <source>Language Matcher</source>
+                <target>Language Matcher</target>
+            </trans-unit>
+            <trans-unit id="site.enableLanguageRedirection">
+                <source>Enable language redirection</source>
+                <target>Sprach-Weiterleitung aktivieren</target>
+            </trans-unit>
+            <trans-unit id="site.languageRedirectionStatus">
+                <source>HTTP status code of a language redirection</source>
+                <target>HTTP Status Code der Sprach-Weiterleitung</target>
+            </trans-unit>
+            <trans-unit id="site.languageRedirectionStatus.description">
+                <source>The default status is "303 See Other"</source>
+                <target>Standard ist "303 See Other"</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

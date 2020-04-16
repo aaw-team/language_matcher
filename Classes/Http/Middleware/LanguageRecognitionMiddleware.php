@@ -92,6 +92,12 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
             ]);
             return false;
         }
+        if (!$site->getConfiguration()['enableLanguageRedirection']) {
+            $this->logger->debug('Language redirection is not enabled for this site', [
+                'site-identifier' => $site->getIdentifier(),
+            ]);
+            return false;
+        }
         if (count($site->getLanguages()) <= 1) {
             $this->logger->warning('This site does not have more than one language', [
                 'site-identifier' => $site->getIdentifier(),
@@ -169,8 +175,14 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
             $parameters
         );
 
+        // HTTP status
+        $status = (int)$site->getConfiguration()['languageRedirectionStatus'];
+        if (!in_array($status, [302, 303])) {
+            $status = 303;
+        }
+
         return GeneralUtility::makeInstance(RedirectResponse::class, (string)$uri)
-            ->withStatus(303)
+            ->withStatus($status)
             ->withHeader('Location', (string)$uri)
             ->withAddedHeader('Vary', 'user-agent,accept-language');
     }
