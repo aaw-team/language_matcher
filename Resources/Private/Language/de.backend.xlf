@@ -8,6 +8,10 @@
                 <source>Language Matcher</source>
                 <target>Language Matcher</target>
             </trans-unit>
+            <trans-unit id="site.enableLanguageMatching">
+                <source>Enable language matching</source>
+                <target>Sprach-Vergleich aktivieren</target>
+            </trans-unit>
             <trans-unit id="site.enableLanguageRedirection">
                 <source>Enable language redirection</source>
                 <target>Sprach-Weiterleitung aktivieren</target>

@@ -7,6 +7,9 @@
             <trans-unit id="site.palette.languagematcher">
                 <source>Language Matcher</source>
             </trans-unit>
+            <trans-unit id="site.enableLanguageMatching">
+                <source>Enable language matching</source>
+            </trans-unit>
             <trans-unit id="site.enableLanguageRedirection">
                 <source>Enable language redirection</source>
             </trans-unit>

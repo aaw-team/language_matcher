@@ -9,20 +9,32 @@
  */
 
 $siteColumns = [
-    'enableLanguageRedirection' => [
-        'label' => 'LLL:EXT:language_matcher/Resources/Private/Language/backend.xlf:site.enableLanguageRedirection',
+    'enableLanguageMatching' => [
+        'label' => 'LLL:EXT:language_matcher/Resources/Private/Language/backend.xlf:site.enableLanguageMatching',
+        'onChange' => 'reload',
         'config' => [
             'type' => 'check',
             'renderType' => 'checkboxToggle',
+            'default' => false,
+        ],
+    ],
+    'enableLanguageRedirection' => [
+        'label' => 'LLL:EXT:language_matcher/Resources/Private/Language/backend.xlf:site.enableLanguageRedirection',
+        'displayCond' => 'FIELD:enableLanguageMatching:REQ:true',
+        'config' => [
+            'type' => 'check',
+            'renderType' => 'checkboxToggle',
+            'default' => false,
         ],
     ],
     'languageRedirectionStatus' => [
         'label' => 'LLL:EXT:language_matcher/Resources/Private/Language/backend.xlf:site.languageRedirectionStatus',
         'description' => 'LLL:EXT:language_matcher/Resources/Private/Language/backend.xlf:site.languageRedirectionStatus.description',
+        'displayCond' => 'FIELD:enableLanguageMatching:REQ:true',
         'config' => [
             'type' => 'select',
             'renderType' => 'selectSingle',
-            'default' => '303',
+            'default' => 303,
             'items' => [
                 [ '302 Found', 302 ],
                 [ '303 See Other', 303 ],
@@ -38,6 +50,6 @@ $2', $GLOBALS['SiteConfiguration']['site']['types']['0']['showitem']);
 
 $GLOBALS['SiteConfiguration']['site']['palettes']['languagematcher'] = [
     'showitem' => '
-        enableLanguageRedirection, languageRedirectionStatus,
+        enableLanguageMatching, enableLanguageRedirection, languageRedirectionStatus,
     ',
 ];

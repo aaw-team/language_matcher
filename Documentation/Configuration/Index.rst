@@ -50,6 +50,24 @@ configuration resides in the TYPO3 Site Configuration (see
 
    Extension of the built-in Site Configuration
 
+
+enableLanguageMatching
+----------------------
+
+:aspect:`Title`
+    Enable language matching
+
+:aspect:`Datatype`
+    bool
+
+:aspect:`Default`
+    :code:`false`
+
+:aspect:`Description`
+    En- or disables the language matching. Or in other words: en-/disables the
+    whole functionality of the extension for the Site.
+
+
 enableLanguageRedirection
 -------------------------
 
@@ -63,7 +81,8 @@ enableLanguageRedirection
     :code:`false`
 
 :aspect:`Description`
-    En- or disables the language detection and redirection.
+    En- or disables the language redirection. This is only effective, when
+    :code:`enableLanguageMatching` is enabled.
 
 
 languageRedirectionStatus
@@ -85,3 +104,5 @@ languageRedirectionStatus
     If clients that only know about
     `HTTP/1.0 <https://tools.ietf.org/html/rfc1945#section-9.3>`_ should be
     supported, :code:`302` can be used.
+
+    This is only effective, when :code:`enableLanguageRedirection` is enabled.

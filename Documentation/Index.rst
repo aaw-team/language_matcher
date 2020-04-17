@@ -57,5 +57,6 @@ Table of Contents
    Introduction/Index
    Installation/Index
    Configuration/Index
+   MatchedLanguageAspect/Index
    Sitemap
 
