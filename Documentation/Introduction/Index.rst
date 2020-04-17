@@ -12,16 +12,20 @@ Introduction
 What does it do?
 ================
 
-This extension implements a mechanism that matches the :code:`Accept-Language`
-HTTP header in a request with available site languages and then subsequently
-redirects to the page in the chosen language.
+This extension basically implements a mechanism that matches the
+:code:`Accept-Language` HTTP header from a request with available site
+languages.
 
-Once, a client is viewing the page in his matched language (or no matching
-language could be found), a cookie will be set. As long as the cookie is sent by
-the client, no further matching or redirecting will be done.
+The results of the matching can then be used to redirect a client automatically
+to it's favourite language. In this case, a cookie is used to prevent
+redirection loops.
+
+Redirection can be disabled though. In this case, the results of the matching
+will be made available as
+:ref:`Aspect <matchedlanguageaspect>` through the TYPO3 Context API.
 
 While this extension is pretty zero-configuration, it offers some basic switches
-to fiddle with (see :ref:`configuration`).
+to fiddle with (see :ref:`configuration-site`).
 
 
 .. _screenshots:
