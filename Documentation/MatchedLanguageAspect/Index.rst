@@ -12,14 +12,13 @@ using the :ref:`TYPO3 Context API <t3coreapi:context-api>`. It contains the
 matched language as :php:`SiteLanguage` object (see
 :ref:`t3coreapi:sitehandling-php-api`), or :php:`null` if there was no match.
 
-The MatchedLanguage Aspect accepts two kinds of properties. The one kind
-accesses the properties of the :php:`SiteLanguage` object. That's why a matched
-language must be present (as long as the properties are accessed through the
-official API [:php:`$context->getPropertyFromAspect()`], there are no errors to
-expect if no :php:`SiteLanguage` object exists).
+The MatchedLanguage Aspect accepts two kinds of properties:
 
-The other kind of accepted property is more descriptive for the result of the
-language matching process.
+#.  Results of the language matching process.
+#.  Some properties of the :php:`SiteLanguage` object. That's why a matched
+    language must be present (as long as the properties are accessed through the
+    official API [:php:`$context->getPropertyFromAspect()`], there are no errors
+    to expect if no :php:`SiteLanguage` object exists).
 
 =========================  =====================================================  ================
 Property                   Description                                            Matched language
