@@ -7,36 +7,6 @@
 Configuration
 =============
 
-.. _configuration-extension:
-
-Global Extension Configuration
-==============================
-
-The extension configuration is found in the "Settings" module under "Extension
-Configuration". 
-
-basic.logLevel
---------------
-
-:aspect:`Title`
-    PSR-3 Log Level
-
-:aspect:`Datatype`
-    string
-
-:aspect:`Default`
-    :code:`empty`
-
-:aspect:`Description`
-    The `PSR-3 <https://www.php-fig.org/psr/psr-3/>`_ log level for the separate
-    logfile (:code:`$TYPO3_LOG_DIR/typo3_lm_xxxxxxxxxx.log`). If disabled (set
-    :code:`empty`), no separate logfile will be written, global log
-    configuration applies.
-
-    This makes only sense when precise log information is needed. For example
-    for debugging or alike.
-
-
 .. _configuration-site:
 
 Site Configuration
@@ -109,3 +79,35 @@ languageRedirectionStatus
     supported, :code:`302` can be used.
 
     This is only effective, when :code:`enableLanguageRedirection` is enabled.
+
+
+.. _configuration-extension:
+
+Global Extension Configuration
+==============================
+
+The extension configuration is found in the "Settings" module under "Extension
+Configuration". 
+
+basic.logLevel
+--------------
+
+:aspect:`Title`
+    PSR-3 Log Level
+
+:aspect:`Datatype`
+    string
+
+:aspect:`Default`
+    :code:`empty`
+
+:aspect:`Description`
+    The `PSR-3 <https://www.php-fig.org/psr/psr-3/>`_ log level for the separate
+    logfile (:code:`$TYPO3_LOG_DIR/typo3_lm_xxxxxxxxxx.log`). If disabled (set
+    :code:`empty`), no separate logfile will be written, global log
+    configuration applies.
+
+    .. note::
+    
+        This makes only sense when precise log information is needed. For
+        example for debugging or alike.
