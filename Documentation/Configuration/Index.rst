@@ -25,13 +25,16 @@ basic.logLevel
     string
 
 :aspect:`Default`
-    :code:`error`
+    :code:`empty`
 
 :aspect:`Description`
-    The `PSR-3 <https://www.php-fig.org/psr/psr-3/>`_ log level for the default
-    logfile (:code:`$TYPO3_LOG_DIR/typo3_lm_xxxxxxxxxx.log`).
+    The `PSR-3 <https://www.php-fig.org/psr/psr-3/>`_ log level for the separate
+    logfile (:code:`$TYPO3_LOG_DIR/typo3_lm_xxxxxxxxxx.log`). If disabled (set
+    :code:`empty`), no separate logfile will be written, global log
+    configuration applies.
 
-    Note: An empty log level disables logging.
+    This makes only sense when precise log information is needed. For example
+    for debugging or alike.
 
 
 .. _configuration-site:
