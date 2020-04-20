@@ -12,9 +12,9 @@ Introduction
 What does it do?
 ================
 
-This extension basically implements a mechanism that matches the
-:code:`Accept-Language` HTTP header from a request with available site
-languages.
+This extension implements a `PSR-15 <https://www.php-fig.org/psr/psr-15/>`_
+middleware that matches the :code:`Accept-Language` HTTP header from a request
+with available site languages.
 
 The results of the matching can then be used to redirect a client automatically
 to it's favourite language. In this case, a cookie is used to prevent
