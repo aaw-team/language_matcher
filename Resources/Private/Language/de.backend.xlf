@@ -24,6 +24,10 @@
                 <source>The default status is "303 See Other"</source>
                 <target>Standard ist "303 See Other"</target>
             </trans-unit>
+            <trans-unit id="site.failQuietOnSystemErrors">
+                <source>Fail quiet on system errors</source>
+                <target>Fehler unterdrücken bei Systemfehlern</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

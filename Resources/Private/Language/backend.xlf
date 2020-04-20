@@ -19,6 +19,9 @@
             <trans-unit id="site.languageRedirectionStatus.description">
                 <source>The default status is "303 See Other"</source>
             </trans-unit>
+            <trans-unit id="site.failQuietOnSystemErrors">
+                <source>Fail quiet on system errors</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

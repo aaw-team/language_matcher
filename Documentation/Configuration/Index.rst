@@ -37,8 +37,30 @@ enableLanguageMatching
     :code:`false`
 
 :aspect:`Description`
-    En- or disables the language matching. Or in other words: en-/disables the
-    whole functionality of the extension for the Site.
+    En- or disables the language matching.
+
+
+failQuietOnSystemErrors
+-----------------------
+
+:aspect:`Title`
+    Fail quiet on system errors
+
+:aspect:`Datatype`
+    bool
+
+:aspect:`Default`
+    :code:`false`
+
+:aspect:`Description`
+    Setting this option to :code:`true` will suppress :php:`\RuntimeException`
+    being thrown when the system is not in the expected state. The errors will
+    be logged anyway.
+
+    .. note::
+
+        Be sure to closely monitor your logs when this option is turned on.
+        Otherwise, you might miss important information.
 
 
 enableLanguageRedirection

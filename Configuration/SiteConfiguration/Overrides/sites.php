@@ -41,6 +41,14 @@ $siteColumns = [
             ],
         ],
     ],
+    'failQuietOnSystemErrors' => [
+        'label' => 'LLL:EXT:language_matcher/Resources/Private/Language/backend.xlf:site.failQuietOnSystemErrors',
+        'config' => [
+            'type' => 'check',
+            'renderType' => 'checkboxToggle',
+            'default' => false,
+        ],
+    ],
 ];
 
 $GLOBALS['SiteConfiguration']['site']['columns'] = array_merge($GLOBALS['SiteConfiguration']['site']['columns'], $siteColumns);
@@ -50,6 +58,7 @@ $2', $GLOBALS['SiteConfiguration']['site']['types']['0']['showitem']);
 
 $GLOBALS['SiteConfiguration']['site']['palettes']['languagematcher'] = [
     'showitem' => '
-        enableLanguageMatching, enableLanguageRedirection, languageRedirectionStatus,
+        enableLanguageMatching, failQuietOnSystemErrors, --linebreak--,
+        enableLanguageRedirection, languageRedirectionStatus,
     ',
 ];

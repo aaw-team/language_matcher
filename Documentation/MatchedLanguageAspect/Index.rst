@@ -52,11 +52,3 @@ PHP Example
         // Retrieve the navigationTitle of the matched language
         $linkText = $context->getPropertyFromAspect('matchedLanguage', 'navigationTitle');
     }
-
-
-.. note::
-
-    When the extension is not enabled for a site, the aspect does not exist.
-    Trying to access it would in that case lead to a
-    :php:`TYPO3\CMS\Core\Context\Exception\AspectNotFoundException`.
-

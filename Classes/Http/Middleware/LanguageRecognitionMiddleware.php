@@ -64,24 +64,29 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!$this->shouldProcessLanguageMatching($request)) {
+        if (!$this->canProcessLanguageMatching($request)) {
+            // Early return when the system is not in the expected state. Make
+            // sure the aspect exists to prevent errors.
+            $this->context->setAspect('matchedLanguage', new MatchedLanguageAspect());
             return $handler->handle($request);
         }
 
         $matchingLanguage = null;
-        $acceptableLanguageCandidates = $this->getAcceptableLanguageCandidates($request);
-        if (!empty($acceptableLanguageCandidates)) {
-            $matchingLanguage = $this->getMatchingLanguage($request, $acceptableLanguageCandidates);
+        if ($this->shouldProcessLanguageMatching($request)) {
+            $acceptableLanguageCandidates = $this->getAcceptableLanguageCandidates($request);
+            if (!empty($acceptableLanguageCandidates)) {
+                $matchingLanguage = $this->getMatchingLanguage($request, $acceptableLanguageCandidates);
 
-            if ($matchingLanguage !== null && $this->shouldRedirectToLanguage($request, $matchingLanguage)) {
-                $response = $this->getLanguageRedirectionResponse($request, $matchingLanguage);
-                $this->logger->info('Sending language redirect response', [
-                    'accept-language-header' => $request->getHeaderLine('accept-language'),
-                    'target-language-id' => $matchingLanguage->getLanguageId(),
-                    'request-uri' => (string)$request->getUri(),
-                    'redirect-location-uri' => $response->getHeaderLine('Location')
-                ]);
-                return $response;
+                if ($matchingLanguage !== null && $this->shouldRedirectToLanguage($request, $matchingLanguage)) {
+                    $response = $this->getLanguageRedirectionResponse($request, $matchingLanguage);
+                    $this->logger->info('Sending language redirect response', [
+                        'accept-language-header' => $request->getHeaderLine('accept-language'),
+                        'target-language-id' => $matchingLanguage->getLanguageId(),
+                        'request-uri' => (string)$request->getUri(),
+                        'redirect-location-uri' => $response->getHeaderLine('Location')
+                    ]);
+                    return $response;
+                }
             }
         }
 
@@ -109,19 +114,51 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
 
     /**
      * @param ServerRequestInterface $request
+     * @throws \RuntimeException
+     * @return bool
+     */
+    protected function canProcessLanguageMatching(ServerRequestInterface $request): bool
+    {
+        try {
+            $siteObjectIsOk = false;
+            $site = $request->getAttribute('site');
+            if (!$site instanceof Site) {
+                $type = gettype($site) === 'object' ? get_class($site) : gettype($site);
+                throw new \RuntimeException('Request attribute "site" is expected to be ' . Site::class . '. Got ' . $type . ' instead.');
+            }
+            $siteObjectIsOk = true;
+            $pageArguments = $request->getAttribute('routing');
+            if (!$pageArguments instanceof PageArguments) {
+                $type = gettype($pageArguments) === 'object' ? get_class($pageArguments) : gettype($pageArguments);
+                throw new \RuntimeException('Request attribute "routing" is expected to be ' . PageArguments::class . '. Got ' . $type . ' instead.');
+            }
+            $currentSiteLanguage = $request->getAttribute('language');
+            if (!$currentSiteLanguage instanceof SiteLanguage) {
+                $type = gettype($currentSiteLanguage) === 'object' ? get_class($currentSiteLanguage) : gettype($currentSiteLanguage);
+                throw new \RuntimeException('Request attribute "language" is expected to be ' . SiteLanguage::class . '. Got ' . $type . ' instead.');
+            }
+        } catch(\RuntimeException $e) {
+            $this->logger->critical($e->getMessage(), [
+                'site-identifier' => $siteObjectIsOk ? $site->getIdentifier() : null,
+                'request-uri' => (string)$request->getUri(),
+            ]);
+            if ($siteObjectIsOk && $site->getConfiguration()['failQuietOnSystemErrors']) {
+                return false;
+            }
+            throw $e;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param ServerRequestInterface $request
      * @return bool
      */
     protected function shouldProcessLanguageMatching(ServerRequestInterface $request): bool
     {
-        // Check the request attributes (initial system-test)
+        /** @var Site $site */
         $site = $request->getAttribute('site');
-        if (!$site instanceof Site) {
-            $type = gettype($site);
-            $this->logger->critical('Request attribute "site" is not the correct type', [
-                'type' => $type === 'object' ? get_class($site) : $type,
-            ]);
-            return false;
-        }
         if (!$this->getSiteConfiguration($request)['enableLanguageMatching']) {
             $this->logger->debug('Language matching is not enabled for this site', [
                 'site-identifier' => $site->getIdentifier(),
@@ -142,25 +179,6 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
         } elseif ($this->isBotRequest($request)) {
             $this->logger->info('Skip language matching: found bot', [
                 'user-agent' => $request->getHeaderLine('user-agent'),
-            ]);
-            return false;
-        }
-
-        // Check the remaining request attributes
-        $pageArguments = $request->getAttribute('routing');
-        if (!$pageArguments instanceof PageArguments) {
-            $type = gettype($pageArguments);
-            $this->logger->critical('Request attribute "routing" is not the correct type', [
-                'type' => $type === 'object' ? get_class($pageArguments) : $type,
-            ]);
-            return false;
-        }
-
-        $currentSiteLanguage = $request->getAttribute('language');
-        if (!$currentSiteLanguage instanceof SiteLanguage) {
-            $type = gettype($currentSiteLanguage);
-            $this->logger->critical('Request attribute "language" is not the correct type', [
-                'type' => $type === 'object' ? get_class($currentSiteLanguage) : $type,
             ]);
             return false;
         }
