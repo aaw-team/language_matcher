@@ -106,7 +106,7 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
         $response = $handler->handle($request);
 
         // When redirection is enabled, set a cookie to prevent redirection loops
-        if ($this->getSiteConfiguration($request)['enableLanguageRedirection']) {
+        if ($this->getSiteConfiguration($request)['enableLanguageRedirection'] && !$request->getCookieParams()[self::REDIRECT_COOKIE_NAME]) {
             $response = $this->addRedirectCookieToResponse($response);
         }
         return $response;
