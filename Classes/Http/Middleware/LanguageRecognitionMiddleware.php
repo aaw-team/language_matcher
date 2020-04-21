@@ -10,7 +10,7 @@ namespace AawTeam\LanguageMatcher\Http\Middleware;
  * The TYPO3 project - inspiring people to share!
  */
 
-use AawTeam\LanguageMatcher\Cache\Cache;
+use AawTeam\LanguageMatcher\Cache\CacheFactory;
 use AawTeam\LanguageMatcher\Cache\TYPO32DeviceDetectorCacheBridge;
 use AawTeam\LanguageMatcher\Context\MatchedLanguageAspect;
 use AawTeam\LanguageMatcher\Utility\DependencyLoaderUtility;
@@ -39,6 +39,11 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
     protected const REDIRECT_COOKIE_NAME = 'language-matcher-redirect';
 
     /**
+     * @var CacheFactory
+     */
+    protected $cacheFactory;
+
+    /**
      * @var Context
      */
     protected $context;
@@ -49,11 +54,13 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
     protected $typoScriptFrontendController;
 
     /**
+     * @param CacheFactory $cacheFactory
      * @param Context $context
      * @param TypoScriptFrontendController $typoScriptFrontendController
      */
-    public function __construct(Context $context = null, TypoScriptFrontendController $typoScriptFrontendController = null)
+    public function __construct(CacheFactory $cacheFactory = null, Context $context = null, TypoScriptFrontendController $typoScriptFrontendController = null)
     {
+        $this->cacheFactory = $cacheFactory ?? GeneralUtility::makeInstance(CacheFactory::class);
         $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
         $this->typoScriptFrontendController = $typoScriptFrontendController ?? $GLOBALS['TSFE'];
     }
@@ -442,7 +449,7 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
         }
 
         $userAgentCacheIdentifier = 'ib-' . md5($userAgent);
-        $cache = Cache::factory();
+        $cache = $this->cacheFactory->getCache();
 
         if ($cache->has($userAgentCacheIdentifier)) {
             $isBot = $cache->get($userAgentCacheIdentifier);

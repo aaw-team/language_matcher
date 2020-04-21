@@ -15,17 +15,30 @@ use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Cache
+ * CacheFactory
  */
-class Cache
+class CacheFactory
 {
     public const CACHE_IDENTIFIER = 'language-matcher';
 
     /**
+     * @var CacheManager
+     */
+    protected $cacheManager;
+
+    /**
+     * @param CacheManager $cacheManager
+     */
+    public function __construct(CacheManager $cacheManager = null)
+    {
+        $this->cacheManager = $cacheManager ?? GeneralUtility::makeInstance(CacheManager::class);
+    }
+
+    /**
      * @return FrontendInterface
      */
-    public static function factory(): FrontendInterface
+    public function getCache(): FrontendInterface
     {
-        return GeneralUtility::makeInstance(CacheManager::class)->getCache(self::CACHE_IDENTIFIER);
+        return $this->cacheManager->getCache(self::CACHE_IDENTIFIER);
     }
 }

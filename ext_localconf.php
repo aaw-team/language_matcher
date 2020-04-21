@@ -12,7 +12,7 @@ defined('TYPO3_MODE') or die();
 
 $bootstrap = function () {
     // Register cache
-    $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][\AawTeam\LanguageMatcher\Cache\Cache::CACHE_IDENTIFIER] = [
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations'][\AawTeam\LanguageMatcher\Cache\CacheFactory::CACHE_IDENTIFIER] = [
         'backend' => \TYPO3\CMS\Core\Cache\Backend\SimpleFileBackend::class,
         'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
         'options' => [
