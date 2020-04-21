@@ -183,7 +183,7 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
             return false;
         }
         if (count($site->getLanguages()) <= 1) {
-            $this->logger->warning('This site does not have more than one language', [
+            $this->logger->debug('This site does not have more than one language', [
                 'site-identifier' => $site->getIdentifier(),
             ]);
             return false;

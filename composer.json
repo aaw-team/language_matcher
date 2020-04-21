@@ -18,6 +18,9 @@
         "typo3/cms-core": "^9.5 || ~10.3.0",
         "piwik/device-detector": "^3.12"
     },
+    "require-dev": {
+        "nimut/testing-framework": "^5.0"
+    },
     "replace": {
         "typo3-ter/language_matcher": "self.version"
     },
@@ -26,8 +29,23 @@
             "AawTeam\\LanguageMatcher\\": "Classes/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "AawTeam\\LanguageMatcher\\Tests\\": "Tests/"
+        }
+    },
     "support": {
         "source": "https://github.com/aaw-team/language_matcher",
         "issues": "https://github.com/aaw-team/language_matcher/issues"
+    },
+    "config": {
+        "vendor-dir": ".Build/vendor",
+        "bin-dir": ".Build/bin"
+    },
+    "extra": {
+        "typo3/cms": {
+            "app-dir": ".Build",
+            "web-dir": ".Build/public"
+        }
     }
 }
