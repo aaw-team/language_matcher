@@ -13,6 +13,7 @@ namespace AawTeam\LanguageMatcher\Http\Middleware;
 use AawTeam\LanguageMatcher\Cache\CacheFactory;
 use AawTeam\LanguageMatcher\Cache\TYPO32DeviceDetectorCacheBridge;
 use AawTeam\LanguageMatcher\Context\MatchedLanguageAspect;
+use AawTeam\LanguageMatcher\Service\LanguageMatcherService;
 use AawTeam\LanguageMatcher\Utility\DependencyLoaderUtility;
 use DeviceDetector\Parser\Bot as BotParser;
 use Psr\Http\Message\ResponseInterface;
@@ -39,6 +40,11 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
     protected const REDIRECT_COOKIE_NAME = 'language-matcher-redirect';
 
     /**
+     * @var LanguageMatcherService
+     */
+    protected $languageMatcherService;
+
+    /**
      * @var CacheFactory
      */
     protected $cacheFactory;
@@ -58,8 +64,9 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
      * @param Context $context
      * @param TypoScriptFrontendController $typoScriptFrontendController
      */
-    public function __construct(CacheFactory $cacheFactory = null, Context $context = null, TypoScriptFrontendController $typoScriptFrontendController = null)
+    public function __construct(LanguageMatcherService $languageMatcherService = null, CacheFactory $cacheFactory = null, Context $context = null, TypoScriptFrontendController $typoScriptFrontendController = null)
     {
+        $this->languageMatcherService = $languageMatcherService ?? GeneralUtility::makeInstance(LanguageMatcherService::class);
         $this->cacheFactory = $cacheFactory ?? GeneralUtility::makeInstance(CacheFactory::class);
         $this->context = $context ?? GeneralUtility::makeInstance(Context::class);
         $this->typoScriptFrontendController = $typoScriptFrontendController ?? $GLOBALS['TSFE'];
@@ -80,20 +87,23 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
 
         $matchingLanguage = null;
         if ($this->shouldProcessLanguageMatching($request)) {
-            $acceptableLanguageCandidates = $this->getAcceptableLanguageCandidates($request);
-            if (!empty($acceptableLanguageCandidates)) {
-                $matchingLanguage = $this->getMatchingLanguage($request, $acceptableLanguageCandidates);
 
-                if ($matchingLanguage !== null && $this->shouldRedirectToLanguage($request, $matchingLanguage)) {
-                    $response = $this->getLanguageRedirectionResponse($request, $matchingLanguage);
-                    $this->logger->info('Sending language redirect response', [
-                        'accept-language-header' => $request->getHeaderLine('accept-language'),
-                        'target-language-id' => $matchingLanguage->getLanguageId(),
-                        'request-uri' => (string)$request->getUri(),
-                        'redirect-location-uri' => $response->getHeaderLine('Location')
-                    ]);
-                    return $response;
-                }
+            $matchingLanguage = $this->languageMatcherService->getMatchingLanguage(
+                $request->getAttribute('site'),
+                $this->languageMatcherService->getAcceptableLanguageCandidates(
+                    $request->getHeaderLine('accept-language')
+                )
+            );
+
+            if ($matchingLanguage !== null && $this->shouldRedirectToLanguage($request, $matchingLanguage)) {
+                $response = $this->getLanguageRedirectionResponse($request, $matchingLanguage);
+                $this->logger->info('Sending language redirect response', [
+                    'accept-language-header' => $request->getHeaderLine('accept-language'),
+                    'target-language-id' => $matchingLanguage->getLanguageId(),
+                    'request-uri' => (string)$request->getUri(),
+                    'redirect-location-uri' => $response->getHeaderLine('Location')
+                ]);
+                return $response;
             }
         }
 
@@ -340,101 +350,6 @@ class LanguageRecognitionMiddleware implements MiddlewareInterface, LoggerAwareI
         /** @var Site $site */
         $site = $request->getAttribute('site');
         return $site->getConfiguration();
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     * @param array $acceptableLanguageCandidates
-     * @return SiteLanguage|null
-     */
-    protected function getMatchingLanguage(ServerRequestInterface $request, array $acceptableLanguageCandidates): ?SiteLanguage
-    {
-        // Early return when no candidates are provided
-        if (empty($acceptableLanguageCandidates)) {
-            return null;
-        }
-
-        /** @var Site $site */
-        $site = $request->getAttribute('site');
-        if (!$site) {
-            return null;
-        }
-        $availableLanguages = $site->getLanguages();
-        if (empty($availableLanguages)) {
-            return null;
-        }
-
-        $matchingLanguage = null;
-        foreach ($acceptableLanguageCandidates as $acceptableLanguageCandidate) {
-            foreach ($availableLanguages as $availableLanguage) {
-                /** @var SiteLanguage $availableLanguage */
-                if (strtolower($availableLanguage->getHreflang()) === $acceptableLanguageCandidate[0]) {
-                    $matchingLanguage = $availableLanguage;
-                    $this->logger->debug('Found matching language by hreflang', [
-                        'candidate' => $acceptableLanguageCandidate,
-                        'language-id' => $matchingLanguage->getLanguageId(),
-                    ]);
-                    break 2;
-                }
-            }
-        }
-        if (!$matchingLanguage) {
-            foreach ($acceptableLanguageCandidates as $acceptableLanguageCandidate) {
-                foreach ($availableLanguages as $availableLanguage) {
-                    /** @var SiteLanguage $availableLanguage */
-                    if (strtolower($availableLanguage->getTwoLetterIsoCode()) === $acceptableLanguageCandidate[0]) {
-                        $matchingLanguage = $availableLanguage;
-                        $this->logger->debug('Found matching language by twoLetterIsoCode', [
-                            'candidate' => $acceptableLanguageCandidate,
-                            'language-id' => $matchingLanguage->getLanguageId(),
-                        ]);
-                        break 2;
-                    }
-                }
-            }
-        }
-
-        if (!$matchingLanguage) {
-            $this->logger->debug('No matching language found', [
-                'candidates' => $acceptableLanguageCandidates,
-            ]);
-        }
-        return $matchingLanguage;
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     * @return array
-     */
-    protected function getAcceptableLanguageCandidates(ServerRequestInterface $request): array
-    {
-        $acceptLanguageHeader = $request->getHeaderLine('accept-language');
-        if ($acceptLanguageHeader === '') {
-            return [];
-        }
-
-        $allAcceptedLanguageCandidates = [];
-        foreach (explode(',', $acceptLanguageHeader) as $key => $candidateString) {
-
-            $candidateString = trim($candidateString);
-            $matches = [];
-            $candidatePriority = 1.0;
-            $qualityValueRegex = '~\\s*;\\s*q=(0(?:.[0-9]{1,3})?|1(?:.0{1,3})?)$~';
-            if (preg_match($qualityValueRegex, $candidateString, $matches)) {
-                $candidatePriority = (float)$matches[1];
-                $candidateString = trim(preg_replace($qualityValueRegex, '', $candidateString));
-            }
-
-            $allAcceptedLanguageCandidates[$key] = [
-                strtolower($candidateString),
-                $candidatePriority,
-            ];
-        }
-        uasort($allAcceptedLanguageCandidates, function(array $a, array $b):int {
-            return $b[1] <=> $a[1];
-        });
-
-        return $allAcceptedLanguageCandidates;
     }
 
     /**
