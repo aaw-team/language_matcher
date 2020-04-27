@@ -18,9 +18,9 @@ to fiddle with.
 
 ### System requirements
 
-| Language Matcher | PHP              | TYPO3            |
-| ---------------- | ---------------- | -----------------|
-| 1.0              | 7.2              | 9.5 LTS, 10.3.x  |
+| Language Matcher | PHP              | TYPO3             |
+| ---------------- | ---------------- | ------------------|
+| 1.0              | 7.2              | 9.5 LTS, 10.4 LTS |
 
 ### Extension Installation
 
