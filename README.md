@@ -37,7 +37,7 @@ https://docs.typo3.org/p/aaw-team/language_matcher/master/en-us/
 
 ## License
 
-GNU General Public License v3.0 or later
+GNU General Public License v2.0 or later
 
 ## Copyright
 

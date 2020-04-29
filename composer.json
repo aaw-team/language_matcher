@@ -4,7 +4,7 @@
     "description": "Language recognition and redirection middleware for TYPO3",
     "keywords": ["typo3", "language", "accept-language", "redirect"],
     "homepage": "https://github.com/aaw-team/language_matcher",
-    "license": "GPL-3.0-or-later",
+    "license": "GPL-2.0-or-later",
     "authors": [
         {
             "name": "Agentur am Wasser Team",
