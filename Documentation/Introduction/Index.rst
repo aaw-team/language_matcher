@@ -22,7 +22,9 @@ redirection loops.
 
 Redirection can be disabled though. In this case, the results of the matching
 will be made available as
-:ref:`Aspect <matchedlanguageaspect>` through the TYPO3 Context API.
+:ref:`Aspect <matchedlanguageaspect>` through the TYPO3 Context API. A helpful
+little frontend functionality named :ref:`languagechooser` makes use of the
+aspect.
 
 While this extension is pretty zero-configuration, it offers some basic switches
 to fiddle with (see :ref:`configuration-site`).

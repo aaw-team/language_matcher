@@ -58,6 +58,7 @@ Table of Contents
    Installation/Index
    Configuration/Index
    MatchedLanguageAspect/Index
+   LanguageChooser/Index
    Links
    Sitemap
 
