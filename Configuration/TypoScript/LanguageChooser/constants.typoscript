@@ -1,0 +1,5 @@
+plugin.tx_language_matcher {
+    languageChooser {
+        ajaxPageType = 347552
+    }
+}

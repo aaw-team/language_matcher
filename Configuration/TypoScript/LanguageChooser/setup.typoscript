@@ -1,0 +1,155 @@
+/**
+ * Generate the AjaxHandler JS
+ */
+page.jsFooterInline.6937593 = FLUIDTEMPLATE
+page.jsFooterInline.6937593 {
+    templateName = AjaxHandler
+    format = html
+    templateRootPaths {
+        0 = EXT:language_matcher/Resources/Private/Templating/JavaScript/Templates
+    }
+    extbase {
+        controllerExtensionName = language_matcher
+    }
+    settings {
+        ajaxPageType = {$plugin.tx_language_matcher.languageChooser.ajaxPageType}
+    }
+    variables {
+        ajaxUri = TEXT
+        ajaxUri {
+            typolink {
+                parameter.dataWrap = {page:uid},{$plugin.tx_language_matcher.languageChooser.ajaxPageType}
+                addQueryString = 1
+                addQueryString {
+                    method = GET
+                    exclude =  L,cHash,type
+                }
+                returnLast = url
+            }
+        }
+    }
+}
+
+/**
+ * Assemble the AJAX response
+ */
+languagehint = PAGE
+languagehint {
+    typeNum = {$plugin.tx_language_matcher.languageChooser.ajaxPageType}
+    config {
+        no_cache = 1
+        debug = 0
+        disableAllHeaderCode = 1
+        additionalHeaders {
+            10.header = Content-Type: application/json; charset=utf-8
+            20.header = Cache-control: Private
+            30.header = Vary: Accept-Language
+        }
+    }
+
+    10 = COA
+    10 {
+        wrap = {|}
+        10 = TEXT
+        10 {
+            value = false
+            override = true
+            override.if. {
+                isTrue.data = context:matchedLanguage:canBeRequested
+                isFalse.data = context:matchedLanguage:equalsCurrentLanguage
+            }
+            wrap = "showHint":|,
+        }
+        11 = TEXT
+        11 {
+            value = false
+            override = true
+            override.if.isTrue.data = context:matchedLanguage:canBeRequested
+            wrap = "canBeRequested":|,
+        }
+        12 = TEXT
+        12 {
+            value = false
+            override = true
+            override.if.isTrue.data = context:matchedLanguage:equalsCurrentLanguage
+            wrap = "equalsCurrentLanguage":|,
+        }
+        13 = TEXT
+        13 {
+            data = context:matchedLanguage:navigationTitle // context:matchedLanguage:title
+            stdWrap {
+                stdWrap.encodeForJavaScriptValue = 1
+                replacement.10 {
+                    search = '
+                    replace = "
+                }
+            }
+            wrap = "title":|,
+        }
+        20 = COA
+        20 {
+            10 = TEXT
+            10 {
+                typolink {
+                    parameter.data = page:uid
+                    additionalParams.dataWrap = &L={context:matchedLanguage:id}
+                    addQueryString = 1
+                    addQueryString {
+                        method = GET
+                        exclude =  L,cHash,type
+                    }
+                    returnLast = url
+                }
+            }
+            stdWrap {
+                stdWrap.encodeForJavaScriptValue = 1
+                replacement.10 {
+                    search = '
+                    replace = "
+                }
+                wrap = "uri":|,
+            }
+        }
+        30 = FLUIDTEMPLATE
+        30 {
+            templateName = LanguageChooser
+            format = html
+            templateRootPaths {
+                0 = EXT:language_matcher/Resources/Private/Templating/LanguageChooser/Templates
+            }
+            extbase {
+                controllerExtensionName = language_matcher
+            }
+            settings {
+                ajaxPageType = {$plugin.tx_language_matcher.languageChooser.ajaxPageType}
+            }
+            variables {
+                exists = TEXT
+                exists.data =  context:matchedLanguage:canBeRequested
+                equalsCurrentLanguage = TEXT
+                equalsCurrentLanguage.data =  context:matchedLanguage:equalsCurrentLanguage
+                canBeRequested = TEXT
+                canBeRequested.data =  context:matchedLanguage:canBeRequested
+                id = TEXT
+                id.data =  context:matchedLanguage:id
+                hreflang = TEXT
+                hreflang.data =  context:matchedLanguage:hreflang
+                twoLetterIsoCode = TEXT
+                twoLetterIsoCode.data =  context:matchedLanguage:twoLetterIsoCode
+                title = TEXT
+                title.data =  context:matchedLanguage:title
+                navigationTitle = TEXT
+                navigationTitle.data =  context:matchedLanguage:navigationTitle
+            }
+            stdWrap {
+                stdWrap.encodeForJavaScriptValue = 1
+                replacement.10 {
+                    search = '
+                    replace = "
+                }
+                trim = 1
+                wrap = "html":|
+            }
+        }
+    }
+}
