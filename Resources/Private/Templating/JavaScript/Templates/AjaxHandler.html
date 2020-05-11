@@ -19,7 +19,7 @@
                     el.addEventListener('click', function(e) {
                         if(e.target.dataset && e.target.dataset.languagechooserno) {
                             e.preventDefault();
-                            el.remove();
+                            el.parentNode.removeChild(el);
                             document.cookie = 'languageChooserDisabled' + "=1; path=/";
                         }
                     }, {once:true});
