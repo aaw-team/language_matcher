@@ -11,3 +11,59 @@
 </f:if>
 
 </html>
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<f:if condition="{canBeRequested} && !{equalsCurrentLanguage}">
+    <div id="language-chooser">
+        <div class="language-chooser-inner">
+            <p>Do you want to see the page in your preferred language?</p>
+            <f:link.page language="{id}" addQueryString="1" addQueryStringMethod="GET" argumentsToBeExcludedFromQueryString="{0: 'L', 1: 'cHash', 2: 'type'}">Yes</f:link.page>
+            <a href="" data-languagechooserno="1">No</a>
+        </div>
+    </div>
+
+    <style>
+        #language-chooser {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            width: 360px;
+            box-sizing: border-box;
+            background: #fff;
+            background: linear-gradient(30deg, #f9f9f9, #ffffff);;
+            border: 1px solid #e4e4e4;
+            border-radius: 2px;
+            box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.04)
+        }
+        #language-chooser .language-chooser-inner {
+            padding: 14px;
+        }
+
+        #language-chooser p {
+            padding: 0;
+            margin-top: 0;
+            margin-bottom: 16px;
+            color: #111111;
+        }
+
+        #language-chooser a {
+            background: #ececec;
+            background: linear-gradient(to bottom, #f9f9f9, #ececec);
+            border: 1px solid #e4e4e4;
+            border-radius: 0px;
+            padding: 4px 14px;
+            margin: 0;
+            margin-right: 14px;
+            color: #111111;
+        }
+
+        #language-chooser a:hover,
+        #language-chooser a:focus {
+            color: #111111;
+            border-color: #d1d1d1;
+        }
+    </style>
+</f:if>
+
+</html>
