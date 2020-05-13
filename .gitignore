@@ -5,3 +5,5 @@
 *GENERATED*
 .Build
 composer.lock
+/Resources/Private/PHP/DeviceDetector/vendor
+/Resources/Private/PHP/DeviceDetector/composer.lock
