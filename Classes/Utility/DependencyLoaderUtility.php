@@ -41,7 +41,7 @@ class DependencyLoaderUtility
     private static function getDeviceDetectorLoader(): ClassLoader
     {
         if (self::$deviceDetectorLoader === null) {
-            self::$deviceDetectorLoader = require GeneralUtility::getFileAbsFileName('EXT:language_matcher/Resources/Private/PHP/DeviceDetector/vendor/autoload.php');
+            self::$deviceDetectorLoader = require 'phar://' . GeneralUtility::getFileAbsFileName('EXT:language_matcher/Resources/Private/PHP/DeviceDetector/device-detector.phar/vendor/autoload.php');
         }
         return self::$deviceDetectorLoader;
     }
