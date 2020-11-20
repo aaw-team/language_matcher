@@ -5,6 +5,6 @@
         "prepend-autoloader": false
     },
     "require": {
-        "piwik/device-detector": "^3.12"
+        "matomo/device-detector": "^4.0"
     }
 }
