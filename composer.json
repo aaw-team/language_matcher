@@ -15,7 +15,7 @@
     ],
     "require": {
         "php": ">=7.2",
-        "typo3/cms-core": "^9.5 || ^10.4.10",
+        "typo3/cms-core": "^9.5.23 || ^10.4.10",
         "matomo/device-detector": "^4.0"
     },
     "require-dev": {
