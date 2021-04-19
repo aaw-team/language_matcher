@@ -48,7 +48,8 @@
         },
         "typo3/cms": {
             "app-dir": ".Build",
-            "web-dir": ".Build/public"
+            "web-dir": ".Build/public",
+            "extension-key": "language_matcher"
         }
     }
 }
